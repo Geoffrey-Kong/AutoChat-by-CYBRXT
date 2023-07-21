@@ -4,7 +4,6 @@ from discord.ext import tasks, commands
 from writeToJSON import appendToDatabase
 from helpInterceptor import helpInterceptor
 from profanityInterceptor import blockProfaneMessages, checkProfaneNicknames, checkForSpam 
-from spiteInterceptor import spiteInterceptor
 from decouple import config
 import json
 import random
@@ -64,7 +63,6 @@ async def on_message(message):
     return
   elif message.guild.id in activeServerIDs:
     await blockProfaneMessages(message)
-    await spiteInterceptor(message)
 
 
 async def commandApprovalCheck(interaction: discord.Interaction):
