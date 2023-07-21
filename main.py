@@ -14,18 +14,15 @@ import re
 load_dotenv()
 
 USER_ID = int(os.getenv('USER_ID'))
-
-#List of servers to run message checks
-#1: Server
-#2: The CYBRverse (testing purposes)
-activeServerIDs = [756680992256819251, 915844175428218910]
+SERVER_ID = int(os.getenv('SERVER_ID'))
+SERVER_ID_2 = int(os.getenv('SERVER_ID_2'))
+activeServerIDs = [SERVER_ID, SERVER_ID_2]
 
 #Used to give the bot privileges to perform its functions.
 intents = discord.Intents.all()
 
 #Creates the bot object, with command prefix "/", gives the bot full intents, that were defined previously.
 bot = commands.Bot(command_prefix="/", intents = intents)
-
 
 #Initial bot startup, syncs commands to Discord's API, and lets the user know the the bot is running in the console.
 @bot.event
