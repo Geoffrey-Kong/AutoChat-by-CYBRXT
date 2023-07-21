@@ -34,7 +34,9 @@ async def blockProfaneMessages(message):
       for num, line in enumerate(data):
         entry = json.loads(line)
         if message.author.id == entry["userID"]:
-          if re.search(r"http.*://", message.content) != None:
+          if re.search(r"https://media.discordapp.net/attachments", message.content) != None:
+            wordsInMessage = re.split("/", message.content)
+          elif re.search(r"http.*://", message.content) != None:
             wordsInMessage = re.split("/|-|_", message.content)
           else:
             wordsInMessage = message.content.lower().split()
