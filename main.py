@@ -4,14 +4,16 @@ from discord.ext import tasks, commands
 from writeToJSON import appendToDatabase
 from helpInterceptor import helpInterceptor
 from profanityInterceptor import blockProfaneMessages, checkProfaneNicknames, checkForSpam 
-from decouple import config
+from dotenv import load_dotenv
 import json
 import random
 import os
 import re
 
 
-USER_ID = int(config('USER_ID'))
+load_dotenv()
+
+USER_ID = int(os.getenv('USER_ID'))
 
 #List of servers to run message checks
 #1: Server
@@ -19,11 +21,7 @@ USER_ID = int(config('USER_ID'))
 activeServerIDs = [756680992256819251, 915844175428218910]
 
 #Used to give the bot privileges to perform its functions.
-intents = discord.Intents.default()
-intents.members = True
-intents.presences = True
-intents.message_content = True
-intents.guilds = True
+intents = discord.Intents.all()
 
 #Creates the bot object, with command prefix "/", gives the bot full intents, that were defined previously.
 bot = commands.Bot(command_prefix="/", intents = intents)
@@ -47,10 +45,10 @@ async def on_ready():
 # #Used to change the bot's status every few minutes
 async def cycleStatus(bot):
   statusArr = [
-    discord.Activity(type = 1, name = "with fire"),
-    discord.Activity(type = discord.ActivityType.watching, name = "you. All the time."),
-    discord.Activity(type = discord.ActivityType.listening, name = "messages. 100% of them."),
-    discord.Activity(type = discord.ActivityType.watching, name = "the world burn")
+    discord.Activity(type = 1, name = "STATUS 1"),
+    discord.Activity(type = discord.ActivityType.watching, name = "STATUS 2"),
+    discord.Activity(type = discord.ActivityType.listening, name = "STATUS 3"),
+    discord.Activity(type = discord.ActivityType.watching, name = "STATUS 4")
   ]
   index = random.randint(0, len(statusArr) - 1)
   await bot.change_presence(activity = statusArr[index])
@@ -58,7 +56,6 @@ async def cycleStatus(bot):
 
 @bot.event
 async def on_message(message):
-  await helpInterceptor(bot, message)
   if isinstance(message.channel, discord.channel.DMChannel):
     return
   elif message.guild.id in activeServerIDs:
@@ -217,7 +214,7 @@ async def remove_from_watchlist(interaction: discord.Interaction, user: str):
     return       
 
 
-TOKEN = config("DISCORD_BOT_SECRET")
+TOKEN = os.getenv("DISCORD_BOT_SECRET")
 bot.run(TOKEN)
 
 keep_alive()

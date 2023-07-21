@@ -4,21 +4,30 @@ import re
 import string
 import json
 from datetime import timedelta
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 separators = string.punctuation + string.digits + string.whitespace
 excluded = string.ascii_letters
 
-pIModeEnabled = True
+targetedModeEnabled = True
+
+SERVER_ID = int(os.getenv('USER_ID'))
+SERVER_ID_2 = int(os.getenv('USER_ID_2'))
+
+CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
+CHANNEL_ID_2 = int(os.getenv('CHANNEL_ID_2'))
 
 activeServers = [
   {
-    "serverID": 756680992256819251,
-    "spamChannelIDs": [756680992772849757]
+    "serverID": SERVER_ID,
+    "spamChannelIDs": [CHANNEL_ID]
   },
   {
-    "serverID": 915844175428218910,
-    "spamChannelIDs": [915844175428218913]
+    "serverID": SERVER_ID_2,
+    "spamChannelIDs": [CHANNEL_ID_2]
   }
 ]
 
@@ -28,7 +37,7 @@ activeServers = [
 async def blockProfaneMessages(message):
   if isinstance(message.channel, discord.channel.DMChannel):
     return
-  if pIModeEnabled:
+  if targetedModeEnabled:
     with open("profanitylist.json", "r") as f:
       data = f.readlines()
       for num, line in enumerate(data):
@@ -125,8 +134,8 @@ async def timeoutUser(message = None, member = None, server = None, reason = "",
   if nicknames:
     await member.timeout(duration)
     await member.send(f"You have been timed out of **{server}** for **five minutes** for **using a profane nickname**.")
-    if server.id == 756680992256819251:
-      await server.get_channel(756680992772849757).send(f"<@{member.id}> has been timed out for **five minutes** for **using a profane nickname**.")
+    if server.id == CHANNEL_ID:
+      await server.get_channel(CHANNEL_ID).send(f"<@{member.id}> has been timed out for **five minutes** for **using a profane nickname**.")
     else:
       await server.system_channel.send(f"<@{member.id}> has been timed out for **five minutes** for **using a profane nickname**.")
   else:
