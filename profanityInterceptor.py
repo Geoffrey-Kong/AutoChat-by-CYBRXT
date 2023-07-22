@@ -47,8 +47,8 @@ async def blockProfaneMessages(message):
             wordsInMessage = re.split("/", message.content)
           elif re.search(r"http.*://", message.content) != None:
             wordsInMessage = re.split("/|-|_", message.content)
-          else:
-            wordsInMessage = message.content.lower().split()
+          # else:
+          #   wordsInMessage = message.content.lower().split()
           profane = await checkForProfanity(wordsInMessage)
           if profane:
             await message.delete()
@@ -102,7 +102,7 @@ async def checkForProfanity(wordsInMessage):
     return profane
 
 
-@tasks.loop(seconds = 3)
+@tasks.loop(seconds = 5)
 async def checkForSpam(bot):
   with open("profanitylist.json", "r") as f:
     data = f.readlines()
@@ -119,7 +119,7 @@ async def checkForSpam(bot):
               numSuccessiveMessages += 1
             else:
               numSuccessiveMessages = 0
-            if numSuccessiveMessages >= 5:
+            if numSuccessiveMessages >= 10:
               await timeoutUser(message = m, reason = "spam")
               rMessages = [message async for message in channel.history(limit=10)]
               for message in rMessages:
